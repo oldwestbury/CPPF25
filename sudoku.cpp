@@ -18,7 +18,7 @@ bool check_row(char board[9][9],int i, char v){
     bool found=false;
     for(int j=0;j<9;j++){
         if(board[i][j]==v) {found=true; 
-            //cout <<  "\t\t"<< board[i][j] <<" "<< v << "\n";
+            
              break;}
     }
     return !found;
@@ -27,9 +27,11 @@ bool check_row(char board[9][9],int i, char v){
 bool check_col(char board[9][9],int j, char v){
     bool found=false;
     for(int i=0;i<9;i++){
-        if(board[i][j]==v) {found=true; 
-            //cout <<  "\t\t"<< board[i][j] <<" "<< v << "\n"; 
-            break;}
+        if(board[i][j]==v) {
+            found=true; 
+            
+            break;
+        }
     }
     return !found;
 }
@@ -40,9 +42,9 @@ bool check_square(char board[9][9],int n, char v){
     bool found=false;
     for(int di=0;di<3;di++){    
         for(int dj=0;dj<3;dj++){
-        if(board[i][j]==v) {found=true;
-            // cout <<  "\t\t"<< board[i][j] <<" "<< v << "\n";
-             break;}
+        if(board[di+i][dj+j]==v) {
+            found=true;            
+            break;}
         } 
     }   
     return !found;
@@ -79,7 +81,7 @@ void solve(char board[9][9],int start) {
 
 }
 int main(){
-    char board[9][9]={{ '5', '3', ' ', ' ', '7', ' ', ' ', ' ', ' ' },
+    /*char board[9][9]={{ '5', '3', ' ', ' ', '7', ' ', ' ', ' ', ' ' },
         { '6', ' ', ' ', '1', '9', '5', ' ', ' ', ' ' },
         { ' ', '9', '8', ' ', ' ', ' ', ' ', '6', ' ' },
         { '8', ' ', ' ', ' ', '6', ' ', ' ', ' ', '3' },
@@ -88,6 +90,18 @@ int main(){
         { ' ', '6', ' ', ' ', ' ', ' ', '2', '8', ' ' },
         { ' ', ' ', ' ', '4', '1', '9', ' ', ' ', '5' },
         { ' ', ' ', ' ', ' ', '8', ' ', ' ', '7', '9' }
+    };*/
+char board[9][9]=
+      {
+        { ' ', ' ', ' ', '2', ' ', ' ', '7', '8', ' ' }, // row 0
+        { ' ', '8', ' ', ' ', ' ', ' ', '1', ' ', ' ' }, // row 1
+        { ' ', ' ', '1', '9', ' ', ' ', ' ', ' ', ' ' }, // row 2
+        { ' ', ' ', '3', ' ', ' ', '5', ' ', ' ', ' ' }, // row 3
+        { ' ', ' ', ' ', ' ', ' ', '7', '8', ' ', ' ' }, // row 4
+        { ' ', '2', ' ', ' ', ' ', ' ', ' ', ' ', '9' }, // row 5
+        { '8', ' ', ' ', '1', ' ', ' ', '5', '6', ' ' }, // row 6
+        { ' ', '6', ' ', '3', ' ', ' ', ' ', '2', ' ' }, // row 7
+        { ' ', ' ', ' ', ' ', ' ', '4', ' ', ' ', ' ' }  // row 8
     };
     print_board  (board);
     solve(board,0);
