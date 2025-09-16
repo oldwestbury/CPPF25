@@ -63,12 +63,12 @@ void solve(char board[9][9],int start) {
                 char vchar=v+'0';
                bool check= check_row(board,row,vchar) && check_col(board,col,vchar)  
                && check_square(board,n,vchar);
-               if(check){
+               if(!check) continue;
                 //cout << " row" << row << " col " << col <<"\n";
                 board[row][col]=vchar;//<<
                 solve(board,start+1);
                 board[row][col]= ' ';//<<
-               }
+               
         }
 
     }
