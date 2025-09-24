@@ -291,7 +291,7 @@ public:
 class Student1 : public Person { public: Student1(string n):Person(n){} };
 class Teacher1 : public Person { public: Teacher1(string n):Person(n){} };
 class TA1 : public Student1, public Teacher1 {
-public: TA1(string n):Person(n),Student1(n),Teacher1(n){} };
+public: TA1(string n):Student1(n),Teacher1(n){} };
 
 // ✅ Version 2: With virtual inheritance
 class Student2 : virtual public Person { public: Student2(string n):Person(n){} };
