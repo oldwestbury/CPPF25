@@ -339,6 +339,5 @@ We’ve explored:
 * **Polymorphism** → one interface, many behaviors
 * **Multiple inheritance** (and the diamond problem)
 
-C++ gives us powerful tools—but with great power comes great responsibility. Understanding these OOP pillars and the subtleties of multiple inheritance will make you a stronger, safer C++ developer.
 
 ---
