@@ -65,6 +65,7 @@ public:
 };
 
 int main() {
+    //Shape s; // gives an error beacuse Shape is an abstract class
     Shape* s = new Circle(5);
     s->draw();
     cout << "Area: " << s->area() << endl;
@@ -114,25 +115,44 @@ Polymorphism means the same function call can behave differently depending on th
 using namespace std;
 
 class Animal {
+protected: string name;
 public:
+    Animal(string name) : name{ name } {}
     virtual void speak() { cout << "Animal sound\n"; }
+    string getname() { return name; }
 };
 
 class Dog : public Animal {
 public:
+    Dog(string name) :Animal(name) {}
     void speak() override { cout << "Woof!\n"; }
+    string getname() {
+        return "Dog name is "+name;
+    }
 };
 
 class Cat : public Animal {
 public:
+    Cat(string name) :Animal(name) {}
     void speak() override { cout << "Meow!\n"; }
+    string getname() {
+        return "Cat name is " + name;
+    }
+
 };
 
 int main() {
-    Animal* a1 = new Dog();
-    Animal* a2 = new Cat();
+   
+    Animal* a1 = new Dog("levi");
+    Animal* a2 = new Cat("sophie");
     a1->speak(); // Woof!
     a2->speak(); // Meow!
+
+    cout << a1->getname(); //call animal::getname
+    Cat c("orange");
+    cout << c.getname(); //call cat::getname
+
+
     delete a1;
     delete a2;
 }
