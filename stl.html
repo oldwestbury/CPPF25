@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive C++ STL Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Calm Neutrals -->
+    <!-- Application Structure Plan: The application uses a fixed sidebar navigation for direct access to different STL components (containers, iterators, algorithms), and a main content area that updates dynamically. This non-linear, dashboard-style structure was chosen to allow users to easily compare containers and explore topics in any order, which is more effective for learning and reference than a linear document. Key interactions include clicking navigation links to switch content, and viewing a performance comparison chart that visually summarizes the trade-offs between data structures, enhancing comprehension. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Container performance characteristics (Big O notation). Goal: Compare. Viz/Presentation: Interactive Bar Chart. Interaction: The chart displays complexities for all containers, allowing for quick visual comparison. Justification: A chart is more intuitive for comparing performance data than reading text for each container individually. Library: Chart.js (Canvas).
+        - Report Info: Methods for each container (e.g., vector::push_back). Goal: Inform/Teach. Viz/Presentation: Interactive code blocks with explanations. Interaction: Clicking on a method name reveals its specific code snippet and description. Justification: This breaks down complex examples into manageable parts and actively engages the user. Library/Method: Vanilla JS DOM manipulation.
+        - Report Info: Iterator concepts. Goal: Organize/Explain. Viz/Presentation: Diagram built with HTML/CSS. Interaction: Buttons will simulate iterator movement. Justification: Visualizing the abstract concept of an iterator makes it more concrete and easier to understand. Library/Method: HTML/CSS with JS event handlers.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .nav-link.active {
+            background-color: #d4d4d8;
+            color: #18181b;
+            font-weight: 600;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-stone-100 text-slate-800">
+
+    <div class="flex h-screen">
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 bg-stone-50 text-slate-700 p-4 flex-shrink-0 overflow-y-auto">
+            <h1 class="text-2xl font-bold mb-6 text-slate-900">C++ STL Guide</h1>
+            <nav id="main-nav">
+                <h2 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Main</h2>
+                <ul>
+                    <li><a href="#introduction" class="nav-link block w-full text-left px-3 py-2 rounded-md transition-colors duration-200 hover:bg-stone-200">Introduction</a></li>
+                    <li><a href="#performance" class="nav-link block w-full text-left px-3 py-2 rounded-md transition-colors duration-200 hover:bg-stone-200">Performance Chart</a></li>
+                </ul>
+                <h2 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-6 mb-2">Containers</h2>
+                <ul>
+                    <li><a href="#vector" class="nav-link block w-full text-left px-3 py-2 rounded-md transition-colors duration-200 hover:bg-stone-200">std::vector</a></li>
+                    <li><a href="#list" class="nav-link block w-full text-left px-3 py-2 rounded-md transition-colors duration-200 hover:bg-stone-200">std::list</a></li>
+                    <li><a href="#deque" class="nav-link block w-full text-left px-3 py-2 rounded-md transition-colors duration-200 hover:bg-stone-200">std::deque</a></li>
+                    <li><a href="#set" class="nav-link block w-full text-left px-3 py-2 rounded-md transition-colors duration-200 hover:bg-stone-200">std::set</a></li>
+                    <li><a href="#map" class="nav-link block w-full text-left px-3 py-2 rounded-md transition-colors duration-200 hover:bg-stone-200">std::map</a></li>
+                    <li><a href="#unordered_set" class="nav-link block w-full text-left px-3 py-2 rounded-md transition-colors duration-200 hover:bg-stone-200">std::unordered_set</a></li>
+                    <li><a href="#unordered_map" class="nav-link block w-full text-left px-3 py-2 rounded-md transition-colors duration-200 hover:bg-stone-200">std::unordered_map</a></li>
+                </ul>
+                 <h2 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-6 mb-2">Concepts</h2>
+                <ul>
+                    <li><a href="#iterators" class="nav-link block w-full text-left px-3 py-2 rounded-md transition-colors duration-200 hover:bg-stone-200">Iterators</a></li>
+                    <li><a href="#algorithms" class="nav-link block w-full text-left px-3 py-2 rounded-md transition-colors duration-200 hover:bg-stone-200">Algorithms</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 p-8 overflow-y-auto">
+            <div id="content-area">
+                <!-- Content sections will be dynamically inserted here -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const stlData = {
+            introduction: {
+                title: 'The Complete C++ STL Guide',
+                content: `
+                    <p class="text-lg mb-4">The C++ Standard Template Library (STL) is a cornerstone of modern C++ development. It provides a robust set of generic classes and functions for data management and common computational tasks.</p>
+                    <p>This interactive guide explores the main components—containers, iterators, and algorithms—with detailed explanations and classic C++ syntax examples. Use the navigation on the left to explore the different parts of the STL.</p>
+                `
+            },
+            performance: {
+                title: 'Container Performance Comparison (Big O)',
+                content: `
+                    <p class="mb-6">Understanding the performance trade-offs between different containers is crucial for writing efficient code. This chart visualizes the average time complexity for common operations. Lower bars indicate better performance.</p>
+                    <div class="chart-container">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                `
+            },
+            vector: {
+                title: '`std::vector` (Dynamic Array)',
+                content: `
+                    <p class="mb-4">A <code>std::vector</code> is a dynamic array that stores elements in contiguous memory. This allows for very fast <strong>random access</strong> ($O(1)$) using <code>[]</code> or <code>.at()</code>. However, inserting or deleting elements in the middle requires shifting all subsequent elements, which can be slow ($O(N)$).</p>
+                    <div class="bg-white p-4 rounded-lg shadow">
+<pre class="bg-slate-900 text-white p-4 rounded-md overflow-x-auto"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+int main() {
+    std::vector&lt;int&gt; numbers;
+    numbers.push_back(10); // Add 10
+    numbers.push_back(30); // Add 30
+
+    std::cout &lt;&lt; "Initial size: " &lt;&lt; numbers.size() &lt;&lt; std::endl;
+
+    numbers.insert(numbers.begin() + 1, 20);
+
+    std::cout &lt;&lt; "Vector contents:" &lt;&lt; std::endl;
+    for (size_t i = 0; i < numbers.size(); ++i) {
+        std::cout &lt;&lt; numbers[i] &lt;&lt; " ";
+    }
+    std::cout &lt;&lt; std::endl;
+
+    numbers.pop_back(); // Remove the last element (30)
+    std::cout &lt;&lt; "Front: " &lt;&lt; numbers.front() &lt;&lt; ", Back: " &lt;&lt; numbers.back() &lt;&lt; std::endl;
+
+    return 0;
+}
+</code></pre>
+                        <div class="mt-4 p-4 bg-stone-50 rounded">
+                            <h4 class="font-semibold">Expected Output:</h4>
+                            <pre>Initial size: 2\nVector contents:\n10 20 30 \nFront: 10, Back: 20</pre>
+                        </div>
+                    </div>
+                `
+            },
+            list: {
+                title: '`std::list` (Doubly-Linked List)',
+                content: `
+                    <p class="mb-4">A <code>std::list</code> is a doubly-linked list where each element holds a pointer to the next and previous elements. This structure allows for <strong>constant-time insertion and deletion</strong> ($O(1)$) at any position, but it sacrifices fast random access.</p>
+                     <div class="bg-white p-4 rounded-lg shadow">
+<pre class="bg-slate-900 text-white p-4 rounded-md overflow-x-auto"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;list&gt;
+
+int main() {
+    std::list&lt;int&gt; my_list;
+    my_list.push_back(10);
+    my_list.push_back(20);
+    my_list.push_front(5);
+
+    std::cout &lt;&lt; "Initial List: ";
+    // ... print list ...
+    std::cout &lt;&lt; std::endl;
+
+    my_list.pop_front();
+    my_list.pop_back();
+
+    my_list.remove(10); // removes all 10s
+    // ...
+    return 0;
+}
+</code></pre>
+                        <div class="mt-4 p-4 bg-stone-50 rounded">
+                            <h4 class="font-semibold">Key Methods:</h4>
+                            <ul class="list-disc pl-5">
+                                <li><code>push_front() / pop_front()</code>: Add/remove from the beginning.</li>
+                                <li><code>push_back() / pop_back()</code>: Add/remove from the end.</li>
+                                <li><code>remove(value)</code>: Removes all elements matching the value.</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            deque: {
+                title: '`std::deque` (Double-Ended Queue)',
+                content: `
+                    <p class="mb-4">A <code>std::deque</code> (pronounced "deck") offers fast insertion and deletion at both the <strong>front and back</strong> ($O(1)$), as well as fast random access ($O(1)$), making it a flexible alternative to <code>std::vector</code>.</p>
+                     <div class="bg-white p-4 rounded-lg shadow">
+<pre class="bg-slate-900 text-white p-4 rounded-md overflow-x-auto"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;deque&gt;
+
+int main() {
+    std::deque&lt;int&gt; my_deque;
+    my_deque.push_back(10);
+    my_deque.push_front(5);
+    my_deque.push_back(15);
+    // Deque is now: 5 10 15
+
+    std::cout &lt;&lt; "Front: " &lt;&lt; my_deque.front() &lt;&lt; ", Back: " &lt;&lt; my_deque.back() &lt;&lt; std::endl;
+
+    my_deque.pop_front();
+    my_deque.pop_back();
+    // Deque is now: 10
+    return 0;
+}
+</code></pre>
+                        <div class="mt-4 p-4 bg-stone-50 rounded">
+                            <h4 class="font-semibold">Key Methods:</h4>
+                             <ul class="list-disc pl-5">
+                                <li><code>push_front() / pop_front()</code>: Fast add/remove from the beginning.</li>
+                                <li><code>push_back() / pop_back()</code>: Fast add/remove from the end.</li>
+                                <li><code>at(index)</code> or <code>[]</code>: Fast random access.</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            set: {
+                title: '`std::set` (Sorted Set)',
+                content: `
+                    <p class="mb-4">A <code>std::set</code> stores <strong>unique</strong> elements in a sorted order. It's ideal for maintaining a collection of unique items where fast lookup is critical ($O(\log N)$).</p>
+                    <div class="bg-white p-4 rounded-lg shadow">
+<pre class="bg-slate-900 text-white p-4 rounded-md overflow-x-auto"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;set&gt;
+
+int main() {
+    std::set&lt;int&gt; my_set;
+    my_set.insert(30);
+    my_set.insert(10);
+    my_set.insert(20);
+    my_set.insert(10); // Duplicate, ignored
+
+    if (my_set.count(20)) {
+        std::cout &lt;&lt; "20 is in the set." &lt;&lt; std::endl;
+    }
+    
+    my_set.erase(30);
+    // Set now contains: 10 20
+    return 0;
+}
+</code></pre>
+                        <div class="mt-4 p-4 bg-stone-50 rounded">
+                           <h4 class="font-semibold">Key Methods:</h4>
+                             <ul class="list-disc pl-5">
+                                <li><code>insert(value)</code>: Adds a unique value, maintaining sort order.</li>
+                                <li><code>find(value)</code>: Returns an iterator to the element, or <code>.end()</code> if not found.</li>
+                                <li><code>count(value)</code>: Returns 1 if element exists, 0 otherwise.</li>
+                                <li><code>erase(value)</code>: Removes an element.</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            map: {
+                title: '`std::map` (Sorted Key-Value Pairs)',
+                content: `
+                    <p class="mb-4">A <code>std::map</code> stores unique key-value pairs, sorted by key. This is the go-to container for creating a dictionary or lookup table with efficient lookups ($O(\log N)$).</p>
+                    <div class="bg-white p-4 rounded-lg shadow">
+<pre class="bg-slate-900 text-white p-4 rounded-md overflow-x-auto"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;map&gt;
+#include &lt;string&gt;
+
+int main() {
+    std::map&lt;std::string, int&gt; ages;
+    ages.insert(std::make_pair("John", 30));
+    ages["Jane"] = 25; // Direct access insertion/update
+    
+    std::cout &lt;&lt; "Jane's age: " &lt;&lt; ages["Jane"] &lt;&lt; std::endl;
+
+    if (ages.count("John")) {
+        std::cout &lt;&lt; "Found John." &lt;&lt; std::endl;
+    }
+    ages.erase("John");
+    return 0;
+}
+</code></pre>
+                        <div class="mt-4 p-4 bg-stone-50 rounded">
+                           <h4 class="font-semibold">Key Methods:</h4>
+                             <ul class="list-disc pl-5">
+                                <li><code>insert(pair)</code>: Adds a key-value pair.</li>
+                                <li><code>find(key)</code>: Finds an element by its key.</li>
+                                <li><code>[]</code>: Direct access for insertion or retrieval.</li>
+                                <li><code>erase(key)</code>: Removes an element by its key.</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            unordered_set: {
+                title: '`std::unordered_set` (Hashed Set)',
+                content: `
+                    <p class="mb-4">An <code>std::unordered_set</code> stores unique elements in no particular order, using a hash table. It is the best choice when performance is paramount (average $O(1)$) and sorting is not required.</p>
+                     <div class="bg-white p-4 rounded-lg shadow">
+<pre class="bg-slate-900 text-white p-4 rounded-md overflow-x-auto"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;unordered_set&gt;
+
+int main() {
+    std::unordered_set&lt;int&gt; my_set;
+    my_set.insert(30);
+    my_set.insert(10);
+    my_set.insert(20);
+
+    if (my_set.count(20)) {
+        std::cout &lt;&lt; "20 is in the set." &lt;&lt; std::endl;
+    }
+    return 0;
+}
+</code></pre>
+                    </div>
+                `
+            },
+            unordered_map: {
+                title: '`std::unordered_map` (Hashed Key-Value Pairs)',
+                content: `
+                    <p class="mb-4">An <code>std::unordered_map</code> stores unique key-value pairs using a hash table. It provides the fastest average performance for dictionary-like operations (average $O(1)$).</p>
+                    <div class="bg-white p-4 rounded-lg shadow">
+<pre class="bg-slate-900 text-white p-4 rounded-md overflow-x-auto"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;unordered_map&gt;
+#include &lt;string&gt;
+
+int main() {
+    std::unordered_map&lt;std::string, int&gt; ages;
+    ages["John"] = 30; 
+    ages["Jane"] = 25; 
+    
+    ages["Jane"] = 26; // Update
+    std::cout &lt;&lt; "Jane's new age: " &lt;&lt; ages["Jane"] &lt;&lt; std::endl;
+    return 0;
+}
+</code></pre>
+                    </div>
+                `
+            },
+            iterators: {
+                title: 'Iterators',
+                content: `
+                    <p class="mb-4">Iterators are the glue between containers and algorithms. They act like pointers, allowing you to traverse a container's elements without knowing its internal implementation. Different containers support different types of iterators, which determines how they can be used with algorithms.</p>
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h4 class="font-semibold mb-2">Types of Iterators:</h4>
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li><strong>Random Access:</strong> Move to any position (<code>vector</code>, <code>deque</code>).</li>
+                            <li><strong>Bidirectional:</strong> Move forward and backward (<code>list</code>, <code>set</code>, <code>map</code>).</li>
+                            <li><strong>Forward:</strong> Move forward only.</li>
+                        </ul>
+<pre class="mt-4 bg-slate-900 text-white p-4 rounded-md overflow-x-auto"><code class="language-cpp">std::vector&lt;int&gt; numbers = {10, 20, 30};
+std::vector&lt;int&gt;::iterator it = numbers.begin();
+// it now "points" to 10
+it++;
+// it now "points" to 20
+std::cout &lt;&lt; *it; // prints 20
+</code></pre>
+                    </div>
+                `
+            },
+            algorithms: {
+                title: 'Algorithms',
+                content: `
+                    <p class="mb-4">Algorithms are generic functions from the <code>&lt;algorithm&gt;</code> header that perform operations on data, independent of the container. They work with iterator ranges (e.g., from <code>.begin()</code> to <code>.end()</code>).</p>
+                     <div class="bg-white p-4 rounded-lg shadow">
+                        <h4 class="font-semibold mb-2">Common Algorithms:</h4>
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li><code>std::sort(begin, end)</code>: Sorts elements in a range.</li>
+                            <li><code>std::find(begin, end, value)</code>: Searches for a value.</li>
+                            <li><code>std::count(begin, end, value)</code>: Counts occurrences of a value.</li>
+                            <li><code>std::accumulate(begin, end, initial_sum)</code>: Sums up elements (from <code>&lt;numeric&gt;</code>).</li>
+                        </ul>
+<pre class="mt-4 bg-slate-900 text-white p-4 rounded-md overflow-x-auto"><code class="language-cpp">std::vector&lt;int&gt; nums = {5, 2, 8, 1};
+std::sort(nums.begin(), nums.end());
+// nums is now {1, 2, 5, 8}
+</code></pre>
+                    </div>
+                `
+            },
+
+        };
+
+        const contentArea = document.getElementById('content-area');
+        const navLinks = document.querySelectorAll('.nav-link');
+        let performanceChart = null;
+
+        function renderContent(hash) {
+            const key = hash.substring(1);
+            const data = stlData[key] || stlData.introduction;
+
+            contentArea.innerHTML = `
+                <div class="content-section active">
+                    <h2 class="text-3xl font-bold mb-4 text-slate-900">${data.title}</h2>
+                    ${data.content}
+                </div>
+            `;
+            
+            if (key === 'performance') {
+                createPerformanceChart();
+            }
+
+            navLinks.forEach(link => {
+                link.classList.toggle('active', link.getAttribute('href') === hash);
+            });
+        }
+        
+        function createPerformanceChart() {
+            const ctx = document.getElementById('performanceChart');
+            if (!ctx) return;
+            if (performanceChart) {
+                performanceChart.destroy();
+            }
+            
+            const complexities = {
+                'Access': [1, 5, 1, 4, 4, 1, 1], // 1=O(1), 4=O(logN), 5=O(N)
+                'Search': [5, 5, 5, 4, 4, 1, 1],
+                'Insert/Delete (Middle)': [5, 1, 5, 4, 4, 1, 1],
+                'Insert/Delete (End)': [1, 1, 1, 4, 4, 1, 1],
+            };
+
+            const labels = ['vector', 'list', 'deque', 'set', 'map', 'unordered_set', 'unordered_map'];
+            const data = {
+                labels: labels,
+                datasets: Object.keys(complexities).map((op, index) => {
+                    const colors = ['#334155', '#64748b', '#94a3b8', '#cbd5e1'];
+                    return {
+                        label: op,
+                        data: complexities[op],
+                        backgroundColor: colors[index % colors.length]
+                    };
+                })
+            };
+
+            performanceChart = new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Average Time Complexity (Lower is Better)',
+                            font: { size: 16 }
+                        },
+                        tooltip: {
+                             callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (value === 1) label += 'O(1)';
+                                    else if (value === 4) label += 'O(log N)';
+                                    else if (value === 5) label += 'O(N)';
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    if (value === 1) return 'O(1)';
+                                    if (value === 4) return 'O(log N)';
+                                    if (value === 5) return 'O(N)';
+                                    return '';
+                                },
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function handleNavigation() {
+            const hash = window.location.hash || '#introduction';
+            renderContent(hash);
+        }
+
+        window.addEventListener('hashchange', handleNavigation);
+        window.addEventListener('DOMContentLoaded', handleNavigation);
+
+    </script>
+</body>
+</html>
