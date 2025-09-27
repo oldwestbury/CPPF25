@@ -351,13 +351,14 @@ classDiagram
 
 ```mermaid
 flowchart TD
-  A[Start: std::sort(range)] --> B{Range size small?}
-  B -- Yes --> C[Use insertion sort]
-  B -- No --> D[Perform quicksort partition]
+  A["Start: std::sort(range)"] --> B{Range size small?}
+  B -->|Yes| C[Use insertion sort]
+  B -->|No| D[Perform quicksort partition]
   D --> E{Recursion depth exceeded?}
-  E -- No --> F[Recurse on subranges]
-  E -- Yes --> G[Switch to heapsort for safety]
-  F --> H[Finished]
+  E -->|No| F[Recurse on subranges]
+  E -->|Yes| G[Switch to heapsort for safety]
+  C --> H[Finished]
+  F --> H
   G --> H
 ```
 
@@ -383,9 +384,3 @@ graph LR
 > Shows how two keys (`"apple"` and `"ape"`) can map to the same bucket and be stored via chaining (linked-list) inside that bucket.
 
 ---
-
-If you'd like, I can also:
-
-* Convert these diagrams to PNG/SVG and embed images into the Markdown (useful for platforms that don't render Mermaid).
-* Add an animated GIF demonstrating iterator movement (would require exporting frames).
-* Add more algorithm flowcharts (e.g., `std::stable_sort`, `std::nth_element`) or data-structure visualizations.
