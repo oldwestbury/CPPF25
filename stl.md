@@ -261,6 +261,7 @@ std::cout << *it; // prints 20
 for(std::vector<int>::iterator it=numbers.begin(); it!=numbers.end();it++){
     std::cout  << *it;
 }
+```
 ---
 
 ## ⚙️ Algorithms
