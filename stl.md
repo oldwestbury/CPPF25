@@ -256,6 +256,11 @@ it++; // now points to 20
 std::cout << *it; // prints 20
 ```
 
+```cpp
+
+for(std::vector<int>::iterator it=numbers.begin(); it!=numbers.end();it++){
+    std::cout  << *it;
+}
 ---
 
 ## ⚙️ Algorithms
