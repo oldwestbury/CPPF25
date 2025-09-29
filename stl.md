@@ -151,6 +151,8 @@ int main() {
 * `count(value)`
 * `erase(value)`
 
+
+If you need to have duplicate, you can use multiset
 ---
 
 ### `std::map` (Sorted Key-Value Pairs)
