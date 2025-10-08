@@ -1,26 +1,30 @@
 
 #include <iostream>
 using namespace std;
-
+#define LINE 12
 void print_board(char board[9][9], int start=0)
 {
-    for(int l=0;l<start;l++)  cout <<"\t";
-    for(int l=0;l<9;l++)cout << "-";
-    cout <<"\n";
+    
     for (int i = 0; i < 9; i++)
     {
-        for(int l=0;l<start;l++)
-            cout <<"\t";
+        if(i%3==0){
+            for(int l=0;l<start;l++)  cout <<"\t";
+            for(int l=0;l<LINE;l++)cout << "-";
+            cout <<"\n";
+        }
+        for(int l=0;l<start;l++)   cout <<"\t";
         for (int j = 0; j < 9; j++)
         {
-            
+            if(j%3==0)cout <<"|";
             cout << board[i][j];
         }
+        cout <<"|";
         cout << "\n";
     }
 
     for(int l=0;l<start;l++)     cout <<"\t";
-    for(int l=0;l<9;l++) cout << "-";
+    for(int l=0;l<LINE;l++) cout << "-";
+    cout <<"\n";
     cout <<"\n";
     
 }
