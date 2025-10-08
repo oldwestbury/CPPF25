@@ -1,32 +1,11 @@
 # Pointers and Memory Management
 
-## C: malloc / free
 
 ###  Pointers in C
 
 ---
 
-## Table of Contents
-1. **What is a Pointer?**
-2. **Pointer Declaration and Initialization**
-3. **Pointer Operators**
-   - Address-of Operator (`&`)
-   - Dereference Operator (`*`)
-4. **Pointer Arithmetic**
-5. **Pointers and Arrays**
-6. **Strings in C++**
-7. **Pointers to Pointers**
-8. **Pointers and Functions**
-   - Passing Pointers to Functions
-   - Returning Pointers from Functions
-9. **Dynamic Memory Allocation**
-   - `malloc`, `calloc`, `realloc`, and `free`
-10. **`void *` (Generic Pointers)**
-11. **`NULL` Pointer**
-12. **Common Pitfalls and Best Practices**
-13. **Conclusion**
 
----
 
 ## 1. What is a Pointer?
 
@@ -445,34 +424,10 @@ int main() {
 - **Null Pointers**: Initialize pointers to `NULL` and check for `NULL` before dereferencing.
 - **Pointer Arithmetic**: Be careful when performing arithmetic on pointers to avoid out-of-bounds errors.
 
----
-
-## 13. Conclusion
-
-Pointers, strings, and memory management are fundamental concepts in C++ that allow you to write efficient and flexible programs. By mastering these concepts, you'll be able to:
-- Manipulate memory directly using pointers.
-- Work with strings and arrays effectively.
-- Use dynamic memory allocation to manage resources.
-- Handle generic data types with `void *`.
-- Avoid common pitfalls like memory leaks and dangling pointers.
-
-## C++: new / delete
-
-# Differences Between C and C++ in Pointers (Excluding Function Pointers)
+# Differences Between C and C++ in Pointers 
 
 While C and C++ share many similarities, there are some key differences in how pointers are used and managed between the two languages. This tutorial highlights these differences, excluding function pointers, to help you understand how pointers behave in C++ compared to C.
 
----
-
-## Table of Contents
-1. **Introduction**
-2. **Pointer Declaration and Initialization**
-3. **Dynamic Memory Allocation**
-4. **References in C++**
-5. **Smart Pointers in C++**
-6. **Conclusion**
-
----
 
 ## 1. Introduction
 
