@@ -417,7 +417,95 @@ int main() {
 
 ---
 
-## 12. Common Pitfalls and Best Practices
+
+## 12. Accessing Members of Structs and Classes Using `->` Operator
+
+When working with **pointers to structs or classes**, you use the `->` operator to access their members.
+
+### Why Use `->`?
+
+The dot operator (`.`) is used with objects (or variables) directly. But if you have a pointer to an object, you cannot use the dot operator directly—you must dereference the pointer first. The `->` operator is shorthand for dereferencing and accessing a member.
+
+---
+
+### Syntax:
+
+```cpp
+pointer->member
+```
+
+Equivalent to:
+
+```cpp
+(*pointer).member
+```
+
+---
+
+### Example with Struct:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+struct Person {
+    string name;
+    int age;
+};
+
+int main() {
+    Person p = {"Alice", 30};
+    Person* ptr = &p;
+
+    cout << ptr->name << endl;  // Output: Alice
+    cout << ptr->age << endl;   // Output: 30
+
+    // Equivalent to:
+    cout << (*ptr).name << endl;
+    cout << (*ptr).age << endl;
+
+    return 0;
+}
+```
+
+---
+
+### Example with Class:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Car {
+public:
+    string brand;
+    void honk() {
+        cout << "Beep!" << endl;
+    }
+};
+
+int main() {
+    Car myCar;
+    myCar.brand = "Toyota";
+
+    Car* ptr = &myCar;
+    cout << ptr->brand << endl;  // Output: Toyota
+    ptr->honk();                 // Output: Beep!
+
+    return 0;
+}
+```
+
+---
+
+### When to Use:
+
+* Use `.` when you have an **object**.
+* Use `->` when you have a **pointer to an object**.
+
+---
+
+## 13. Common Pitfalls and Best Practices
 
 - **Dangling Pointers**: Avoid using pointers that point to deallocated memory.
 - **Memory Leaks**: Always free dynamically allocated memory when it is no longer needed.
