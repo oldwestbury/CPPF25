@@ -1,344 +1,230 @@
-# rule of three — Slide Export
+Perfect ✅ — so you want **Mermaid diagrams inside Markdown** and a **slide-by-slide layout** (each slide separated by `---`).
+
+Here’s the complete illustrated Markdown version of your **“Rule of Three — C++”** presentation, ready for GitHub, Obsidian, or VS Code preview:
 
 ---
 
-## Slide 1
+# Rule of Three — C++
 
-### C++: Rule of Three
+CPSC 131 · CSU Fullerton
+**Kevin A. Wortman**
 
-C++: Rule of Three
+---
 
-CPSC 131 ~ CSU Fullerton
-Kevin A. Wortman
+## Slide 1 — Rule of Three Overview
 
-#### Layout Diagram
+### Recall: RAII (Resource Acquisition Is Initialization)
+
+* **Constructor** → responsible for `new` (memory allocation)
+* **Destructor** → responsible for `delete` (memory release)
+
+### The Rule of Three
+
+If a class defines **any one** of these, it must define **all three**:
+
+1. **Destructor**
+2. **Copy constructor**
+3. **Copy assignment operator**
+
+These functions handle **object initialization** and **resource management**.
 
 ```mermaid
 flowchart TD
-%% Layout Analysis Diagram
-S0["C++: Rule of Three"]
-S1["CPSC 131 ~ CSU Fullerton<br>Kevin A. Wortman"]
-S0 -. vertically aligned .-> S1
-```
+A["Class manages dynamic resource"]
+B["Defines destructor"]
+C["Defines copy constructor"]
+D["Defines copy assignment operator"]
+E["All 3 must handle new/delete properly"]
 
+A --> B
+A --> C
+A --> D
+B & C & D --> E
+```
 
 ---
 
-## Slide 2
+## Slide 2 — Why It Matters
 
-### C++ Rule of Three
+* These member functions **initialize** and **manage** an object’s owned memory.
+* Improper handling leads to:
 
-C++ Rule of Three
+  * 🔴 **Double deletion**
+  * 🔴 **Memory leaks**
+  * 🔴 **Dangling pointers**
+
+```mermaid
+flowchart LR
+X["Constructor allocates (new)"] --> Y["Destructor deallocates (delete)"]
+Y --> Z["Copy constructor & assignment must duplicate safely"]
+Z --> X
+```
+
+---
+
+## Slide 3 — Example: `MaybeInt`
+
+A class that may or may not own an integer in dynamic memory.
 
 ```cpp
-Recall RAII
-constructor is solely responsible for new
-destructor is solely responsible for delete
-Rule of Three: if a class defines any of these, it must define all three:
-Destructor
-Copy constructor
-Copy assignment operator
-```
+class MaybeInt {
+ public:
+  MaybeInt() : value_(nullptr) {}
+  MaybeInt(int value) : value_(new int(value)) {}
 
-#### Layout Diagram
+  ~MaybeInt() {
+    if (value_ != nullptr) {
+      delete value_;
+    }
+  }
+
+ private:
+  int* value_;
+};
+```
 
 ```mermaid
-flowchart TD
-%% Layout Analysis Diagram
-S0["C++ Rule of Three"]
-S1["Recall RAII<br>constructor is solely responsible for new<br>destructor is solely responsible for delete<br>Rule of Three: if a class defi..."]
-S0 -. vertically aligned .-> S1
+classDiagram
+class MaybeInt {
+    - int* value_
+    + MaybeInt()
+    + MaybeInt(int)
+    + ~MaybeInt()
+}
 ```
-
 
 ---
 
-## Slide 3
+## Slide 4 — Bug Example
 
-### Why?
+```cpp
+int main() {
+  MaybeInt a(7);
+  MaybeInt b(a); // Copy constructor (shallow)
+  MaybeInt c;
+  c = a;         // Copy assignment (shallow)
+  return 0;
+}
+```
 
-Why?
-
-These are the member functions that initialize an object
-Obligated to handle new/delete
-Recall
-Destructor: called to destroy an object ~ needs to delete owned data members
-Copy constructor: called to copy an object ~ needs to make a new copy
-Copy assignment operator: called to assign = an object ~ needs to make a new copy
-
-#### Layout Diagram
+### Result — ❌ Undefined Behavior
 
 ```mermaid
 flowchart TD
-%% Layout Analysis Diagram
-S0["Why?"]
-S1["These are the member functions that initialize an object<br>Obligated to handle new/delete<br>Recall<br>Destructor: called to destroy an ..."]
-S0 -. vertically aligned .-> S1
+A[a::value_ → 7]
+B[b::value_ → same pointer as a]
+C[c::value_ → nullptr]
+X["🅧 Double delete when destructors run"]
+A --> X
+B --> X
+C --> X
 ```
 
+Both `a` and `b` try to `delete` the same memory.
 
 ---
 
-## Slide 4
+## Slide 5 — Fix: Define All Three
 
-### Example: MaybeInt
+You must handle memory safely across:
 
-Example: MaybeInt
+* Destructor
+* Copy constructor
+* Copy assignment operator
 
 ```cpp
-class MaybeInt: either owns
-One integer in dynamic memory; or
-Nothing
-Example to illustrate Rule of Three
-Single responsibility principle: better to use std::optional instead
+class MaybeInt {
+ public:
+  MaybeInt() : value_(nullptr) {}
+  MaybeInt(int value) : value_(new int(value)) {}
+
+  // Copy constructor
+  MaybeInt(const MaybeInt& other) {
+    if (other.value_ == nullptr)
+      value_ = nullptr;
+    else
+      value_ = new int(*other.value_);
+  }
+
+  // Copy assignment operator
+  MaybeInt& operator=(const MaybeInt& other) {
+    if (this != &other) {
+      delete value_;
+      if (other.value_ == nullptr)
+        value_ = nullptr;
+      else
+        value_ = new int(*other.value_);
+    }
+    return *this;
+  }
+
+  // Destructor
+  ~MaybeInt() { delete value_; }
+
+ private:
+  int* value_;
+};
 ```
-
-#### Layout Diagram
-
-```mermaid
-flowchart TD
-%% Layout Analysis Diagram
-S0["Example: MaybeInt"]
-S1["class MaybeInt: either owns<br>One integer in dynamic memory; or<br>Nothing<br>Example to illustrate Rule of Three<br>Single responsibili..."]
-S0 -. vertically aligned .-> S1
-```
-
 
 ---
 
-## Slide 5
-
-### Bug Example: MaybeInt
-
-Bug Example: MaybeInt
-
-```cpp
-class MaybeInt { public:  MaybeInt() : value_(nullptr) {}  MaybeInt(int value)  : value_(new int(value)) {}  ~MaybeInt() {    if (value_ != nullptr) {      delete value_;    }   }…private:  int* value_;};
-```
-
-```cpp
-… int main(int argc, char* argv[]) {  MaybeInt a(7);  MaybeInt b(a);  MaybeInt c;  c = a;  return 0;}
-```
-
-#### Layout Diagram
+### Diagram — ✅ Correct Copy Semantics
 
 ```mermaid
 flowchart TD
-%% Layout Analysis Diagram
-S0["Bug Example: MaybeInt"]
-S1["class MaybeInt {  public:   MaybeInt() : value_(nullptr) {}    MaybeInt(int value)   : value_(new int(value)) {}    ~MaybeInt() {     if ..."]
-S2["…  int main(int argc, char* argv[]) {   MaybeInt a(7);   MaybeInt b(a);   MaybeInt c;   c = a;   return 0; }"]
-S0 -. vertically aligned .-> S1
-S1 -. horizontally aligned .-> S2
+A[a::value_ → new(7)]
+B[b::value_ → new(7)]
+C[c::value_ → new(7)]
+
+A -->|"Copy Constructor"| B
+A -->|"Assignment Operator"| C
 ```
 
+* Each object owns its **own** integer.
+* No shared pointers.
+* No double deletion.
 
 ---
 
-## Slide 6
+## Slide 6 — Modern Alternatives
 
-### Bug Example: MaybeInt
+Instead of manual memory handling, prefer:
 
-(invalid)
+* **`std::optional<int>`**
+* **`std::unique_ptr<int>`**
 
-Bug Example: MaybeInt
-
-a::value_
-
-7
-
-b::value_
-
-c::value_
-
-nullptr
-
-🅧 double delete
-
-```cpp
-… int main(int argc, char* argv[]) {  MaybeInt a(7);  MaybeInt b(a);  MaybeInt c;  c = a;  return 0;}
-```
-
-#### Layout Diagram
+They follow **RAII** and eliminate the need for the Rule of Three.
 
 ```mermaid
-flowchart TD
-%% Layout Analysis Diagram
-S0["(invalid)"]
-S1["Bug Example: MaybeInt"]
-S2["…  int main(int argc, char* argv[]) {   MaybeInt a(7);   MaybeInt b(a);   MaybeInt c;   c = a;   return 0; }"]
-S3["a::value_"]
-S4["7"]
-S5["b::value_"]
-S6["c::value_"]
-S7["nullptr"]
-S8["🅧 double delete"]
-subgraph cluster_1
-S0
-S4
-S8
-end
-subgraph cluster_2
-S0
-S4
-end
-subgraph cluster_3
-S0
-S8
-end
-S0 --> S4
-S0 --> S8
-S0 -. horizontally aligned .-> S3
-S0 -. horizontally aligned .-> S4
-S3 -. horizontally aligned .-> S4
-S3 -. vertically aligned .-> S5
-S3 -. vertically aligned .-> S6
-S4 --> S8
-S4 -. vertically aligned .-> S7
-S5 -. vertically aligned .-> S6
-S6 -. horizontally aligned .-> S7
+flowchart LR
+A["Manual new/delete (MaybeInt)"] -->|"❌ Error-prone"| X["Double delete risk"]
+B["std::unique_ptr<int>"] -->|"✅ RAII handles lifetime"| Y["Safe memory"]
+C["std::optional<int>"] -->|"✅ Value semantics"| Y
 ```
-
 
 ---
 
-## Slide 7
+## Slide 7 — Summary Table
 
-### Solution: All 3 Initialization Functions Must new
+| Function                     | Purpose                | Must Handle      |
+| ---------------------------- | ---------------------- | ---------------- |
+| **Destructor**               | Destroys object        | `delete`         |
+| **Copy constructor**         | Duplicates object      | `new`            |
+| **Copy assignment operator** | Replaces existing data | `delete` + `new` |
 
-Solution: All 3 Initialization Functions Must new
-
-Destructor: called to destroy an object ~ needs to delete owned data members
-Copy constructor: called to copy an object ~ needs to make a new copy
-Copy assignment operator: called to assign = an object ~ needs to make a new copy
-
-#### Layout Diagram
+> 🧠 **Rule of Three:**
+> If you define **one**, you must define **all three**.
 
 ```mermaid
 flowchart TD
-%% Layout Analysis Diagram
-S0["Solution: All 3 Initialization Functions Must new"]
-S1["Destructor: called to destroy an object ~ needs to delete owned data members<br>Copy constructor: called to copy an object ~ needs to mak..."]
-S0 -. vertically aligned .-> S1
+A["Destructor"] --> B["Copy Constructor"]
+B --> C["Copy Assignment"]
+C --> A
+style A fill:#ffdddd,stroke:#cc0000
+style B fill:#ddffdd,stroke:#00aa00
+style C fill:#ddddff,stroke:#0000cc
 ```
-
 
 ---
 
-## Slide 8
-
-### Example: MaybeInt
-
-Example: MaybeInt
-
-```cpp
-  MaybeInt() : value_(nullptr) {}  MaybeInt(int value)  : value_(new int(value)) {}  MaybeInt(const MaybeInt& other) {    if (other.value_ == nullptr) {      value_ = nullptr;    } else {      value_ = new int(*other.value_);    }  }  ~MaybeInt() {    if (value_ != nullptr) {      delete value_;    }   }
-```
-
-```cpp
-  MaybeInt& operator=(const MaybeInt& other) {    if (value_ != nullptr) {      delete value_;    }    if (other.value_ == nullptr) {      value_ = nullptr;    } else {      value_ = new int(*other.value_);    }  }… int main(int argc, char* argv[]) {  MaybeInt a(7);  MaybeInt b(a);  MaybeInt c;  c = a;  return 0;}
-```
-
-#### Layout Diagram
-
-```mermaid
-flowchart TD
-%% Layout Analysis Diagram
-S0["Example: MaybeInt"]
-S1["MaybeInt() : value_(nullptr) {}    MaybeInt(int value)   : value_(new int(value)) {}    MaybeInt(const MaybeInt& other) {     if (other.v..."]
-S2["MaybeInt& operator=(const MaybeInt& other) {     if (value_ != nullptr) {       delete value_;     }     if (other.value_ == nullptr) {  ..."]
-S0 -. vertically aligned .-> S1
-S1 -. horizontally aligned .-> S2
-```
-
-
----
-
-## Slide 9
-
-### Example: MaybeInt
-
-Example: MaybeInt
-
-a::value_
-
-7
-
-b::value_
-
-7
-
-c::value_
-
-7
-
-(invalid)
-
-(invalid)
-
-(invalid)
-
-```cpp
-… int main(int argc, char* argv[]) {  MaybeInt a(7);  MaybeInt b(a);  MaybeInt c;  c = a;  return 0;}
-```
-
-#### Layout Diagram
-
-```mermaid
-flowchart TD
-%% Layout Analysis Diagram
-S0["Example: MaybeInt"]
-S1["…  int main(int argc, char* argv[]) {   MaybeInt a(7);   MaybeInt b(a);   MaybeInt c;   c = a;   return 0; }"]
-S2["a::value_"]
-S3["7"]
-S4["b::value_"]
-S5["7"]
-S6["c::value_"]
-S7["7"]
-S8["(invalid)"]
-S9["(invalid)"]
-S10["(invalid)"]
-subgraph cluster_1
-S3
-S8
-end
-subgraph cluster_2
-S5
-S9
-end
-subgraph cluster_3
-S7
-S10
-end
-S2 -. horizontally aligned .-> S3
-S2 -. horizontally aligned .-> S8
-S2 -. vertically aligned .-> S4
-S2 -. vertically aligned .-> S6
-S3 --> S8
-S3 -. horizontally aligned .-> S8
-S3 -. vertically aligned .-> S10
-S3 -. vertically aligned .-> S5
-S3 -. vertically aligned .-> S7
-S3 -. vertically aligned .-> S8
-S3 -. vertically aligned .-> S9
-S4 -. horizontally aligned .-> S5
-S4 -. horizontally aligned .-> S9
-S4 -. vertically aligned .-> S6
-S5 --> S9
-S5 -. horizontally aligned .-> S9
-S5 -. vertically aligned .-> S10
-S5 -. vertically aligned .-> S7
-S5 -. vertically aligned .-> S8
-S5 -. vertically aligned .-> S9
-S6 -. horizontally aligned .-> S10
-S6 -. horizontally aligned .-> S7
-S7 --> S10
-S7 -. horizontally aligned .-> S10
-S7 -. vertically aligned .-> S10
-S7 -. vertically aligned .-> S8
-S7 -. vertically aligned .-> S9
-S8 -. vertically aligned .-> S10
-S8 -. vertically aligned .-> S9
-S9 -. vertically aligned .-> S10
-```
-
+Would you like me to now generate **the image-enhanced version** (with SVG renderings of the code and UML) from this Markdown — so it’s ready for PDF export or slides?
