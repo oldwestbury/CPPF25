@@ -1,9 +1,3 @@
-Perfect ✅ — so you want **Mermaid diagrams inside Markdown** and a **slide-by-slide layout** (each slide separated by `---`).
-
-Here’s the complete illustrated Markdown version of your **“Rule of Three — C++”** presentation, ready for GitHub, Obsidian, or VS Code preview:
-
----
-
 # Rule of Three — C++
 
 CPSC 131 · CSU Fullerton
@@ -106,6 +100,39 @@ int main() {
   return 0;
 }
 ```
+
+### 🔗 Interactive Visualization
+
+👉 [View in Python Tutor](https://pythontutor.com/render.html#code=class%20MaybeInt%20%7B%0A%20public%3A%0A%20%20MaybeInt%28%29%20%3A%20value_%28nullptr%29%20%7B%7D%0A%20%20MaybeInt%28int%20value%29%20%3A%20value_%28new%20int%28value%29%29%20%7B%7D%0A%0A%20%20~MaybeInt%28%29%20%7B%0A%20%20%20%20if%20%28value_%20!%3D%20nullptr%29%20%7B%0A%20%20%20%20%20%20delete%20value_%3B%0A%20%20%20%20%7D%0A%20%20%7D%0A%0A%20private%3A%0A%20%20int*%20value_%3B%0A%7D%3B%0A%0Aint%20main%28%29%20%7B%0A%20%20MaybeInt%20a%287%29%3B%0A%20%20MaybeInt%20b%28a%29%3B%20//%20Copy%20constructor%20%28shallow%29%0A%20%20MaybeInt%20c%3B%0A%20%20c%20%3D%20a%3B%20%20%20%20%20%20%20%20%20//%20Copy%20assignment%20%28shallow%29%0A%20%20return%200%3B%0A%7D&cumulative=false&curInstr=12&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=cpp_g%2B%2B9.3.0&rawInputLstJSON=%5B%5D&textReferences=false)
+
+---
+```dot
+digraph DoubleDelete {
+    rankdir=LR;
+    node [shape=box, style=rounded, fontname="Consolas"];
+
+    subgraph cluster_stack {
+        label="Stack";
+        color="#cccccc";
+        a [label="a::value_"];
+        b [label="b::value_"];
+        c [label="c::value_"];
+    }
+
+    subgraph cluster_heap {
+        label="Heap";
+        color="#cccccc";
+        v [label="7 (invalid)"];
+        x [label="❌ double delete", color="red", fontcolor="red", style="filled", fillcolor="#ffe6e6"];
+    }
+
+    a -> v;
+    b -> v;
+    c -> v;
+
+    {rank=same; v; x;}  // Keeps "❌ double delete" next to 7
+}
+
 
 ### Result — ❌ Undefined Behavior
 
