@@ -2,16 +2,15 @@
 
 ## Topics
 
+- [PillarsofOOP](topics/PillarsofOOP)
+- [stl](topics/stl)
+- [Pointer](topics/pointers)
+- [Rule of Three](topics/ruleofThree)
+
+stl.md
+templates.md
 
 
 ## Lecture 10/20
 
--
-
-Pointers 
-
-struct pointer
-HW 
-implment your own 
-strcpy 
-strcmp
+- HW  implment your own strcpy & strcmp
