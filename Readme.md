@@ -10,5 +10,6 @@
 
 
 ## Lecture 10/20
-
+- [Vector (with rule of 3)](https://gist.github.com/oldwestbury/3d25c40b3296936c2c457f1a1e5bd99e)
+- Circular Buffer 
 - HW  implment your own strcpy & strcmp
