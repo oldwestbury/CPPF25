@@ -6,9 +6,7 @@
 - [stl](topics/stl)
 - [Pointer](topics/pointers)
 - [Rule of Three](topics/ruleofThree)
-
-stl.md
-templates.md
+- [Template](topics/templates)
 
 
 ## Lecture 10/20
