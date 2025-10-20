@@ -271,28 +271,7 @@ drawStep();
 </script>
 
 
-### Result — ❌ Undefined Behavior
 
-```mermaid
-flowchart LR 
-    subgraph stack
-    A["a::value_"]
-    B["b::value_"]
-    C["c::value_"]
-    end
-
-    subgraph heap
-    V["7 (invalid)"]
-    X["nullptr"]
-    end
-
-
-    A --> V
-    B --> V
-    C --> X
-    C --> V
-
-```
 Both `a` and `b` try to `delete` the same memory.
 
 ---
@@ -343,29 +322,191 @@ class MaybeInt {
 
 ### Diagram — ✅ Correct Copy Semantics
 
-```mermaid
 
-flowchart LR 
-    subgraph stack
-    A["a::value_"]
-    B["b::value_"]
-    C["c::value_"]
-    end
+<div id="pointer-animation">
+  <canvas id="pointerCanvas" width="600" height="350"></canvas>
+</div>
 
-    subgraph heap
-    V["7 (invalid)"]
-    X["nullptr"]
-    end
+<script>
+const canvas = document.getElementById('pointerCanvas');
+const ctx = canvas.getContext('2d');
 
+let step = 0;
 
-flowchart TD
-A[a::value_ → new(7)]
-B[b::value_ → new(7)]
-C[c::value_ → new(7)]
+// Stack pointers (hidden initially)
+const stack = [
+  {name: 'a::value_', x: 50, y: 60, target: null, visible: false},
+  {name: 'b::value_', x: 50, y: 110, target: null, visible: false},
+  {name: 'c::value_', x: 50, y: 160, target: null, visible: false}
+];
 
-A -->|"Copy Constructor"| B
-A -->|"Assignment Operator"| C
-```
+// Heap objects
+const heap = [
+  {name: '7a', text: "7", x: 300, y: 60, invalid: false, visible: false},
+  {name: '7b', text: "7", x: 300, y: 110, invalid: false, visible: false},
+  {name: '7c', text: "7", x: 300, y: 160, invalid: false, visible: false}
+];
+
+// Draw one stack pointer and its arrow if visible
+function drawPointer(obj) {
+  if (!obj.visible) return;
+
+  // Draw stack variable box
+  ctx.fillStyle = '#87CEFA';
+  ctx.fillRect(obj.x, obj.y, 90, 20);
+  ctx.strokeRect(obj.x, obj.y, 90, 20);
+  ctx.fillStyle = 'black';
+  ctx.fillText(obj.name, obj.x + 5, obj.y + 15);
+
+  // Draw arrow if there is a target
+  if (obj.target) {
+    ctx.beginPath();
+    ctx.moveTo(obj.x + 90, obj.y + 10);
+    ctx.lineTo(obj.target.x, obj.target.y + 10);
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+}
+
+// Draw heap blocks
+function drawHeap() {
+  heap.forEach(h => {
+    if (h.visible) {
+      ctx.fillStyle = h.invalid ? '#FF6347' : '#90EE90';
+      ctx.fillRect(h.x, h.y, 70, 20);
+      ctx.strokeRect(h.x, h.y, 70, 20);
+      ctx.fillStyle = 'black';
+      const text = h.invalid ? 'undefined' : h.text;
+      ctx.fillText(text, h.x + 5, h.y + 15);
+    }
+  });
+}
+
+// Draw buttons
+function drawButtons() {
+  ctx.fillStyle = '#E0E0E0';
+  ctx.strokeStyle = '#666';
+  ctx.lineWidth = 1;
+
+  // Prev button
+  ctx.fillRect(150, 300, 80, 30);
+  ctx.strokeRect(150, 300, 80, 30);
+  ctx.fillStyle = 'black';
+  ctx.fillText('Prev', 175, 320);
+
+  // Next button
+  ctx.fillStyle = '#E0E0E0';
+  ctx.strokeStyle = '#666';
+  ctx.fillRect(270, 300, 80, 30);
+  ctx.strokeRect(270, 300, 80, 30);
+  ctx.fillStyle = 'black';
+  ctx.fillText('Next', 295, 320);
+}
+
+// Draw everything
+function drawStep() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = 'black';
+  ctx.font = '16px sans-serif';
+  ctx.fillText("Step: " + step, 10, 25);
+
+  drawHeap();
+  stack.forEach(drawPointer);
+  drawButtons();
+}
+
+// Apply logic per step
+function applyStep() {
+  switch(step) {
+    case 1:
+      stack[0].visible = true;
+      heap[0].visible = true;
+      stack[0].target = heap[0];
+      break;
+    case 2:
+      stack[1].visible = true;
+      heap[1].visible = true;
+      stack[1].target = heap[1];
+      break;
+    case 3:
+      stack[2].visible = true;
+      heap[2].visible = true;
+      stack[2].target = heap[2];
+      break;
+    case 4:
+      heap.forEach(h => { h.invalid = true; h.text = 'undefined'; });
+      break;
+    default:
+      break;
+  }
+  drawStep();
+}
+
+// Reset all to initial, then replay up to n
+function resetToStep(n) {
+  stack.forEach(s => { s.visible = false; s.target = null; });
+  heap.forEach(h => { h.visible = false; h.invalid = false; h.text = "7"; });
+
+  for (let i = 1; i <= n; i++) {
+    switch(i) {
+      case 1:
+        stack[0].visible = true;
+        heap[0].visible = true;
+        stack[0].target = heap[0];
+        break;
+      case 2:
+        stack[1].visible = true;
+        heap[1].visible = true;
+        stack[1].target = heap[1];
+        break;
+      case 3:
+        stack[2].visible = true;
+        heap[2].visible = true;
+        stack[2].target = heap[2];
+        break;
+      case 4:
+        heap.forEach(h => { h.invalid = true; h.text = 'undefined'; });
+        break;
+    }
+  }
+  drawStep();
+}
+
+// Navigation
+function nextStep() {
+  if (step < 4) {
+    step++;
+    applyStep();
+  }
+}
+
+function prevStep() {
+  if (step > 0) {
+    step--;
+    resetToStep(step);
+  }
+}
+
+// Click handling for Prev/Next
+canvas.addEventListener('click', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+
+  // Prev
+  if (x >= 150 && x <= 230 && y >= 300 && y <= 330) {
+    prevStep();
+  }
+  // Next
+  else if (x >= 270 && x <= 350 && y >= 300 && y <= 330) {
+    nextStep();
+  }
+});
+
+// Initial draw
+drawStep();
+</script>
 
 * Each object owns its **own** integer.
 * No shared pointers.
