@@ -323,12 +323,12 @@ class MaybeInt {
 ### Diagram — ✅ Correct Copy Semantics
 
 
-<div id="pointer-animation">
-  <canvas id="pointerCanvas" width="600" height="350"></canvas>
+<div id="pointer-animation2">
+  <canvas id="pointerCanvas2" width="600" height="350"></canvas>
 </div>
 
 <script>
-const canvas = document.getElementById('pointerCanvas');
+const canvas = document.getElementById('pointerCanvas2');
 const ctx = canvas.getContext('2d');
 
 let step = 0;
