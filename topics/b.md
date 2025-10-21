@@ -331,7 +331,11 @@ class MaybeInt {
   int* value_;
 };
 </code></pre>
-
+Diagram — ✅ Correct Copy Semantics
+<iframe width="800" height="500" frameborder="0" src="https://pythontutor.com/iframe-embed.html#code=class%20MaybeInt%20%7B%0A%20public%3A%0A%20%20MaybeInt%28%29%20%3A%20value_%28nullptr%29%20%7B%7D%0A%20%20MaybeInt%28int%20value%29%20%3A%20value_%28new%20int%28value%29%29%20%7B%7D%0A%0A%20%20//%20Copy%20constructor%0A%20%20MaybeInt%28const%20MaybeInt%26%20other%29%20%7B%0A%20%20%20%20if%20%28other.value_%20%3D%3D%20nullptr%29%0A%20%20%20%20%20%20value_%20%3D%20nullptr%3B%0A%20%20%20%20else%0A%20%20%20%20%20%20value_%20%3D%20new%20int%28*other.value_%29%3B%0A%20%20%7D%0A%0A%20%20//%20Copy%20assignment%20operator%0A%20%20MaybeInt%26%20operator%3D%28const%20MaybeInt%26%20other%29%20%7B%0A%20%20%20%20if%20%28this%20!%3D%20%26other%29%20%7B%0A%20%20%20%20%20%20delete%20value_%3B%0A%20%20%20%20%20%20if%20%28other.value_%20%3D%3D%20nullptr%29%0A%20%20%20%20%20%20%20%20value_%20%3D%20nullptr%3B%0A%20%20%20%20%20%20else%0A%20%20%20%20%20%20%20%20value_%20%3D%20new%20int%28*other.value_%29%3B%0A%20%20%20%20%7D%0A%20%20%20%20return%20*this%3B%0A%20%20%7D%0A%0A%20%20//%20Destructor%0A%20%20~MaybeInt%28%29%20%7B%20delete%20value_%3B%20%7D%0A%0A%20private%3A%0A%20%20int*%20value_%3B%0A%7D%3B%0A%0Aint%20main%28%29%20%7B%0A%20%20MaybeInt%20a%287%29%3B%0A%20%20MaybeInt%20b%28a%29%3B%20//%20Copy%20constructor%20%28shallow%29%0A%20%20MaybeInt%20c%3B%0A%20%20c%20%3D%20a%3B%20%20%20%20%20%20%20%20%20//%20Copy%20assignment%20%28shallow%29%0A%20%20return%200%3B%0A%7D&codeDivHeight=400&codeDivWidth=350&cumulative=false&curInstr=0&heapPrimitives=nevernest&origin=opt-frontend.js&py=cpp_g%2B%2B9.3.0&rawInputLstJSON=%5B%5D&textReferences=false"> </iframe>
+Each object owns its own integer.
+No shared pointers.
+No double deletion.
 <h2>Summary Table</h2>
 <table border="1" cellspacing="0" cellpadding="6">
 <thead><tr><th>Function</th><th>Purpose</th><th>Must Handle</th></tr></thead>
