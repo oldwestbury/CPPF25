@@ -23,7 +23,13 @@ A --> C
 A --> D
 B & C & D --> E
 ```
-
+    <pre class="mermaid">
+    graph TD;
+        A-->B;
+        B-->C;
+    </pre>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
 ---
 
 ##  Why It Matters
