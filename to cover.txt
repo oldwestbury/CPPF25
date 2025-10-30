@@ -8,3 +8,16 @@ non member
 
 
 https://www.youtube.com/watch?v=LGOgNqkRMs0&list=PLvv0ScY6vfd8j-tlhYVPYgiIyXduu6m-L&index=1
+
+
+https://www.youtube.com/playlist?list=PLvv0ScY6vfd-fxDQiicYsjqAhJqZkkRH-
+
+
+smart pointers
+
+enum Color { black, white, red }; // unscoped enum
+enum class Color { black, white, red }; // enum is now scoped
+Color c = Color::red; // as before, but
+
+auto white = false; // error! white already
+// declared in this scope
