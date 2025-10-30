@@ -1,0 +1,10 @@
+template spelization
+
+lvalue, rvalue, move
+
+member function
+
+non member
+
+
+https://www.youtube.com/watch?v=LGOgNqkRMs0&list=PLvv0ScY6vfd8j-tlhYVPYgiIyXduu6m-L&index=1
