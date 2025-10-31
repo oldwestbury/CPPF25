@@ -44,27 +44,51 @@
 
     /* Mermaid diagram custom style */
     .mermaid {
-      background-color: var(--mermaid-dark);
+      background-color: var(--mermaid-light);
       padding: 1em;
       border-radius: 8px;
       overflow-x: auto;
+      transition: background-color 0.3s;
     }
 
-    /* Dark Mode Support */
-    @media (prefers-color-scheme: dark) {
-      body {
-        background-color: var(--bg-dark);
-        color: var(--text-dark);
-      }
-      h1, h2, h3, h4 {
-        color: var(--heading-dark);
-      }
-      a {
-        color: var(--link-dark);
-      }
-      .mermaid {
-        background-color: var(--mermaid-dark);
-      }
+    /* Dark Mode Class */
+    body.dark-mode {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    body.dark-mode h1,
+    body.dark-mode h2,
+    body.dark-mode h3,
+    body.dark-mode h4 {
+      color: var(--heading-dark);
+    }
+
+    body.dark-mode a {
+      color: var(--link-dark);
+    }
+
+    body.dark-mode .mermaid {
+      background-color: var(--mermaid-dark);
+    }
+
+    /* Toggle Button */
+    #mode-toggle {
+      position: fixed;
+      top: 1em;
+      right: 1em;
+      padding: 0.5em 1em;
+      background: #0077b6;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+      z-index: 1000;
+    }
+
+    #mode-toggle:hover {
+      background: #005f8a;
     }
   </style>
 
@@ -75,8 +99,18 @@
   </script>
 </head>
 <body>
+  <!-- Mode Toggle Button -->
+  <button id="mode-toggle">Toggle Mode</button>
+
   <main>
     {{ content }}
   </main>
+
+  <script>
+    const toggleBtn = document.getElementById('mode-toggle');
+    toggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+    });
+  </script>
 </body>
 </html>
