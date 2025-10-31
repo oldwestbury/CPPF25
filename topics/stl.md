@@ -88,7 +88,7 @@ flowchart LR
     node2 --> node3[["prev | 30 | next"]]
   end
 
-  itStart((iterator)) -.-> node1
+  itStart((it)) -.-> node1
   itPrev((it--)) -.-> node0
   itNext((it++)) -.-> node2
 
@@ -288,8 +288,8 @@ std::sort(nums.begin(), nums.end());
 
 ### Iterator Movement (flowchart)
 
-<pre class="mermaid">
-    ```mermaid
+<div class="mermaid">
+    
 flowchart LR
   subgraph V [std::vector<int>]
     v0["0: 10"] --> v1["1: 20"] --> v2["2: 30"]
@@ -299,14 +299,14 @@ flowchart LR
   v1 -- "+ +" --> v2
   classDef itStyle fill:#f8fafc,stroke:#334155,stroke-width:2px;
   class it0 itStyle;
-      ```
-  </pre>
+      
+  <div>
 
 > Use this diagram to visualize how `it++` moves an iterator from element to element in a random-access container like `std::vector`.
 
 ### Containers Class Diagram (complexities)
 
-```mermaid
+<div class="mermaid">
 classDiagram
     class Vector {
         +Access: O(1)
@@ -351,7 +351,7 @@ classDiagram
     Vector -- List : "different memory layout"
     Set -- Map : "sorted associative"
     Unordered_Set -- Unordered_Map : "hashed associative"
-```
+</div>
 
 ---
 
@@ -360,7 +360,7 @@ classDiagram
 
 ### `std::sort` — High-Level Flow (introsort simplified)
 
-```mermaid
+<div class="mermaid">
 flowchart TD
   A["Start: std::sort(range)"] --> B{Range size small?}
   B -->|Yes| C[Use insertion sort]
@@ -371,13 +371,13 @@ flowchart TD
   C --> H[Finished]
   F --> H
   G --> H
-```
+</div>
 
 > This flowchart summarizes the high-level decisions behind `std::sort` (introspective sort): small ranges use insertion sort; otherwise quicksort is used but if recursion goes too deep (worst-case), it switches to heapsort to guarantee `O(n log n)` behavior.
 
 ### Hashing & Buckets (`std::unordered_map`) — Collision Handling (chaining)
 
-```mermaid
+<div class="mermaid">
 graph LR
   subgraph Table[Hash Table]
     bucket0[Bucket 0]
@@ -390,7 +390,7 @@ graph LR
   valC["key: 'banana' -> hash -> 2"] --> bucket2
   bucket1 --> chainA[["apple"]] --> chainB[["ape"]]
   bucket2 --> chainC[["banana"]]
-```
+</div>
 
 > Shows how two keys (`"apple"` and `"ape"`) can map to the same bucket and be stored via chaining (linked-list) inside that bucket.
 
