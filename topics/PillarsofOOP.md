@@ -115,47 +115,56 @@ Polymorphism means the same function call can behave differently depending on th
 using namespace std;
 
 class Animal {
-protected: string name;
+protected:
+    string name;
+
 public:
-    Animal(string name) : name{ name } {}
-    virtual void speak() { cout << "Animal sound\n"; }
-    string getname() { return name; }
+    Animal(string name) : name{name} {}
+    virtual ~Animal() = default; // always add a virtual destructor for base classes
+
+    virtual void speak() const { cout << "Animal sound\n"; }
+
+    // make getname virtual so derived classes' versions are called via base references
+     string getname() const { return name; }
 };
 
 class Dog : public Animal {
 public:
-    Dog(string name) :Animal(name) {}
-    void speak() override { cout << "Woof!\n"; }
-    string getname() {
-        return "Dog name is "+name;
+    Dog(string name) : Animal(name) {}
+    void speak() const override { cout << "Woof!\n"; }
+
+    string getname() const  {
+        return "Dog name is " + name;
     }
 };
 
 class Cat : public Animal {
 public:
-    Cat(string name) :Animal(name) {}
-    void speak() override { cout << "Meow!\n"; }
-    string getname() {
+    Cat(string name) : Animal(name) {}
+    void speak() const  { cout << "Meow!\n"; }
+
+    string getname() const  {
         return "Cat name is " + name;
     }
-
 };
 
 int main() {
-   
-    Animal* a1 = new Dog("levi");
-    Animal* a2 = new Cat("sophie");
-    a1->speak(); // Woof!
-    a2->speak(); // Meow!
+    Dog d("Luna");
+    Cat c("Whiskers");
 
-    cout << a1->getname(); //call animal::getname
-    Cat c("orange");
-    cout << c.getname(); //call cat::getname
+    Animal& a1 = d;
+    Animal& a2 = c;
 
+    a1.speak();  // Woof!
+    a2.speak();  // Meow!
 
-    delete a1;
-    delete a2;
+    cout << a1.getname() << '\n'; // "Luna"
+    cout << a2.getname() << '\n'; // "Whiskers"
+
+    Cat c2("Orange");
+    cout << c2.getname() << '\n'; // "Cat name is Orange"
 }
+```
 ```
 
 ✅ Same function call `speak()`, but different behavior depending on the object.
