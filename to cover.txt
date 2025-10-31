@@ -39,3 +39,6 @@ int main() {
   Base y;
   foo(y);
 }
+
+
+Scott Mayers book
