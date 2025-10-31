@@ -1,7 +1,3 @@
-<script type="module">
-    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
-    mermaid.initialize({ startOnLoad: true });
-  </script>
   
 # C++ STL Guide
 
@@ -87,16 +83,18 @@ int main() {
 <div class="mermaid">
 
 flowchart LR
-  direction LR
-  subgraph L [std::list<int>]
+  subgraph L [std::list&lt;int&gt;]
     node0[["prev | 5 | next"]] --> node1[["prev | 10 | next"]] --> node2[["prev | 20 | next"]]
     node2 --> node3[["prev | 30 | next"]]
   end
+
   itStart((iterator)) -.-> node1
   itPrev((it--)) -.-> node0
   itNext((it++)) -.-> node2
+
   classDef listNode fill:#ffffff,stroke:#1f2937,stroke-width:1px;
   class node0,node1,node2,node3 listNode;
+
 </div>  
 > This diagram shows a doubly-linked list where each node links to both previous and next nodes. `it++` moves forward; `it--` moves backward.
 
