@@ -396,8 +396,3 @@ graph LR
 > Shows how two keys (`"apple"` and `"ape"`) can map to the same bucket and be stored via chaining (linked-list) inside that bucket.
 
 ---
-
-    <script type="module">
-      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-      mermaid.initialize({ startOnLoad: true, theme: 'default' }); // Adjust theme as needed
-    </script>
