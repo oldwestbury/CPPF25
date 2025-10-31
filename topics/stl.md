@@ -80,8 +80,7 @@ int main() {
 
 ---
 ### Iterator Movement on `std::list` (bidirectional)
-
-```mermaid
+<pre>```mermaid
 flowchart LR
   direction LR
   subgraph L [std::list<int>]
@@ -94,7 +93,7 @@ flowchart LR
   classDef listNode fill:#ffffff,stroke:#1f2937,stroke-width:1px;
   class node0,node1,node2,node3 listNode;
 ```
-
+  </pre>
 > This diagram shows a doubly-linked list where each node links to both previous and next nodes. `it++` moves forward; `it--` moves backward.
 
 ### `std::deque` (Double-Ended Queue)
