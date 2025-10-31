@@ -287,7 +287,7 @@ std::sort(nums.begin(), nums.end());
 
 ### Iterator Movement (flowchart)
 
-```mermaid
+<pre class="mermaid">
 flowchart LR
   subgraph V [std::vector<int>]
     v0["0: 10"] --> v1["1: 20"] --> v2["2: 30"]
@@ -297,7 +297,7 @@ flowchart LR
   v1 -- "+ +" --> v2
   classDef itStyle fill:#f8fafc,stroke:#334155,stroke-width:2px;
   class it0 itStyle;
-```
+  </pre>
 
 > Use this diagram to visualize how `it++` moves an iterator from element to element in a random-access container like `std::vector`.
 
@@ -392,3 +392,8 @@ graph LR
 > Shows how two keys (`"apple"` and `"ape"`) can map to the same bucket and be stored via chaining (linked-list) inside that bucket.
 
 ---
+
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: true, theme: 'default' }); // Adjust theme as needed
+    </script>
