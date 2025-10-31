@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title | default: "My GitHub Pages" }}</title>
+2
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      margin: 2em;
+    }
+  </style>
+
+  <!-- Mermaid.js script included once, hidden from Markdown -->
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({ startOnLoad: true });
+  </script>
+</head>
+<body>
+  <main>
+    {{ content }}
+  </main>
+</body>
+</html>
