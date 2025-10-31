@@ -21,3 +21,21 @@ Color c = Color::red; // as before, but
 
 auto white = false; // error! white already
 // declared in this scope
+
+
+#include <iostream>
+using namespace std;
+struct Base {virtual void hi(){cout << "a";} };
+struct Derived : Base{void hi(){cout <<"b"; }};
+
+void foo(Base &b){
+	
+	b.hi();
+}
+
+int main() {
+  Derived x;
+  foo(x);    // fine
+  Base y;
+  foo(y);
+}
