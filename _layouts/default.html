@@ -5,35 +5,73 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ page.title | default: "My GitHub Pages" }}</title>
 
-  <!-- Custom Colors -->
+  <!-- Custom Colors with Dark/Light Mode -->
   <style>
+    :root {
+      --bg-light: #fdfdff;
+      --bg-dark: #1a1a1a;
+      --text-light: #1a1a1a;
+      --text-dark: #e0e0e0;
+      --heading-light: #054d2b;
+      --heading-dark: #90ee90;
+      --link-light: #0077b6;
+      --link-dark: #00bcd4;
+      --mermaid-light: #e0f7fa;
+      --mermaid-dark: #2c2c3e;
+    }
+
+    /* Base Styles */
     body {
       font-family: system-ui, sans-serif;
       margin: 2em;
-      background-color: #fdfdff; /* page background color */
-      color: #e0e0e0;           /* default text color */
+      background-color: var(--bg-light);
+      color: var(--text-light);
+      transition: background-color 0.3s, color 0.3s;
     }
 
     h1, h2, h3, h4 {
-      color: #054d2b;           /* headings color */
+      color: var(--heading-light);
     }
 
     a {
-      color: #00bcd4;           /* link color */
+      color: var(--link-light);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
     }
 
     /* Mermaid diagram custom style */
     .mermaid {
-      background-color: #2c2c3e;
+      background-color: var(--mermaid-dark);
       padding: 1em;
       border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: var(--bg-dark);
+        color: var(--text-dark);
+      }
+      h1, h2, h3, h4 {
+        color: var(--heading-dark);
+      }
+      a {
+        color: var(--link-dark);
+      }
+      .mermaid {
+        background-color: var(--mermaid-dark);
+      }
     }
   </style>
 
   <!-- Mermaid.js -->
   <script type="module">
     import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
-    mermaid.initialize({ startOnLoad: true });
+    mermaid.initialize({ startOnLoad: true, theme: "default" });
   </script>
 </head>
 <body>
