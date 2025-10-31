@@ -1,9 +1,13 @@
+<script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({ startOnLoad: true });
+  </script>
+  
 # C++ STL Guide
 
 The C++ Standard Template Library (STL) is a cornerstone of modern C++ development. It provides a robust set of generic classes and functions for data management and common computational tasks.
 
-This guide explores the main components—**containers**, **iterators**, and **algorithms**—with detailed explanations and C++ syntax examples. Mermaid diagrams are included to visualize iterators and container characteristics. (Render Mermaid diagrams in a viewer that supports Mermaid, like GitHub, GitLab, or some Markdown preview extensions in editors.)
-
+This guide explores the main components—**containers**, **iterators**, and **algorithms**—with detailed explanations and C++ syntax examples. 
 ---
 
 
@@ -80,7 +84,8 @@ int main() {
 
 ---
 ### Iterator Movement on `std::list` (bidirectional)
-<pre>```mermaid
+<div class="mermaid">
+
 flowchart LR
   direction LR
   subgraph L [std::list<int>]
@@ -92,8 +97,7 @@ flowchart LR
   itNext((it++)) -.-> node2
   classDef listNode fill:#ffffff,stroke:#1f2937,stroke-width:1px;
   class node0,node1,node2,node3 listNode;
-```
-  </pre>
+</div>  
 > This diagram shows a doubly-linked list where each node links to both previous and next nodes. `it++` moves forward; `it--` moves backward.
 
 ### `std::deque` (Double-Ended Queue)
