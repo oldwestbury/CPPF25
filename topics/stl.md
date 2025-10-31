@@ -300,7 +300,7 @@ flowchart LR
   classDef itStyle fill:#f8fafc,stroke:#334155,stroke-width:2px;
   class it0 itStyle;
       
-  <div>
+  </div>
 
 > Use this diagram to visualize how `it++` moves an iterator from element to element in a random-access container like `std::vector`.
 
