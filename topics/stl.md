@@ -288,6 +288,7 @@ std::sort(nums.begin(), nums.end());
 ### Iterator Movement (flowchart)
 
 <pre class="mermaid">
+    ```mermaid
 flowchart LR
   subgraph V [std::vector<int>]
     v0["0: 10"] --> v1["1: 20"] --> v2["2: 30"]
@@ -297,6 +298,7 @@ flowchart LR
   v1 -- "+ +" --> v2
   classDef itStyle fill:#f8fafc,stroke:#334155,stroke-width:2px;
   class it0 itStyle;
+      ```
   </pre>
 
 > Use this diagram to visualize how `it++` moves an iterator from element to element in a random-access container like `std::vector`.
