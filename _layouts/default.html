@@ -4,33 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ page.title | default: "My GitHub Pages" }}</title>
-
-  <!-- Custom Colors -->
+2
   <style>
     body {
       font-family: system-ui, sans-serif;
       margin: 2em;
-      background-color: #1e1e2f; /* page background color */
-      color: #e0e0e0;           /* default text color */
-    }
-
-    h1, h2, h3, h4 {
-      color: #f0a500;           /* headings color */
-    }
-
-    a {
-      color: #00bcd4;           /* link color */
-    }
-
-    /* Mermaid diagram custom style */
-    .mermaid {
-      background-color: #2c2c3e;
-      padding: 1em;
-      border-radius: 8px;
     }
   </style>
 
-  <!-- Mermaid.js -->
+  <!-- Mermaid.js script included once, hidden from Markdown -->
   <script type="module">
     import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
     mermaid.initialize({ startOnLoad: true });
